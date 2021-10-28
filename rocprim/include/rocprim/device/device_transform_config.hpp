@@ -58,7 +58,7 @@ struct transform_config_900
     static constexpr unsigned int item_scale =
         ::rocprim::detail::ceiling_div<unsigned int>(sizeof(Value), sizeof(int));
 
-    using type = transform_config<256, ::rocprim::max(1u, 16u / item_scale)>;
+    using type = transform_config<32, ::rocprim::max(1u, 1u / item_scale)>;
 };
 
 template<class Value>

@@ -97,39 +97,39 @@ struct merge_sort_config_900
         >,
         select_type_case<
             (sizeof(Key) == 2 && sizeof(Value) <= 8),
-            merge_sort_config<256U>
+            merge_sort_config<64U>
         >,
         select_type_case<
             (sizeof(Key) == 4 && sizeof(Value) <= 8),
-            merge_sort_config<512U>
+            merge_sort_config<64U>
         >,
         select_type_case<
             (sizeof(Key) == 8 && sizeof(Value) <= 8),
-            merge_sort_config<1024U>
+            merge_sort_config<64U>
         >,
-        merge_sort_config<limit_block_size<1024U, sizeof(Key) + sizeof(Value), ROCPRIM_WARP_SIZE_64>::value>
+        merge_sort_config<limit_block_size<64U, sizeof(Key) + sizeof(Value), ROCPRIM_WARP_SIZE_64>::value>
     >;
 };
 
 template<class Value>
 struct merge_sort_config_900<rocprim::half, Value>
 {
-    using type = merge_sort_config<limit_block_size<256U, sizeof(rocprim::half) + sizeof(Value), ROCPRIM_WARP_SIZE_64>::value>;
+    using type = merge_sort_config<limit_block_size<64U, sizeof(rocprim::half) + sizeof(Value), ROCPRIM_WARP_SIZE_64>::value>;
 };
 
 template<class Key>
 struct merge_sort_config_900<Key, empty_type>
     : select_type<
         select_type_case<sizeof(Key) == 1, merge_sort_config<64U> >,
-        select_type_case<sizeof(Key) == 2, merge_sort_config<256U> >,
-        select_type_case<sizeof(Key) == 4, merge_sort_config<256U> >,
-        select_type_case<sizeof(Key) >= 8, merge_sort_config<limit_block_size<512U, sizeof(Key), ROCPRIM_WARP_SIZE_64>::value> >
+        select_type_case<sizeof(Key) == 2, merge_sort_config<64U> >,
+        select_type_case<sizeof(Key) == 4, merge_sort_config<64U> >,
+        select_type_case<sizeof(Key) >= 8, merge_sort_config<limit_block_size<64U, sizeof(Key), ROCPRIM_WARP_SIZE_64>::value> >
     > { };
 
 template<>
 struct merge_sort_config_900<rocprim::half, empty_type>
 {
-    using type = merge_sort_config<256U>;
+    using type = merge_sort_config<64U>;
 };
 
 

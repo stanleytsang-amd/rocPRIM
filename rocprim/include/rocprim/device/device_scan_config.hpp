@@ -100,7 +100,7 @@ struct scan_config_900
 
     using type = scan_config<
         limit_block_size<256U, sizeof(Value), ROCPRIM_WARP_SIZE_64>::value,
-        ::rocprim::max(1u, 16u / item_scale),
+        ::rocprim::max(1u, 1u / item_scale),
         ROCPRIM_DETAIL_USE_LOOKBACK_SCAN,
         ::rocprim::block_load_method::block_load_transpose,
         ::rocprim::block_store_method::block_store_transpose,
