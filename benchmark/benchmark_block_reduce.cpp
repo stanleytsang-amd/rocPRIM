@@ -237,6 +237,8 @@ int main(int argc, char *argv[])
     const size_t size = parser.get<size_t>("size");
     const int trials = parser.get<int>("trials");
 
+    std::cout << "benchmark_block_reduce" << std::endl;
+
     // HIP
     hipStream_t stream = 0; // default
     hipDeviceProp_t devProp;

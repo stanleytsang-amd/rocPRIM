@@ -131,7 +131,7 @@ void run_benchmark(benchmark::State& state,
 
 #define CREATE_BENCHMARK(T, TRANSFORM_OP) \
 benchmark::RegisterBenchmark( \
-    ("transform<" #T ", " #TRANSFORM_OP ">"), \
+    ("transform<Datatype:" #T ",Transform Op:" #TRANSFORM_OP ">"), \
     run_benchmark<T, TRANSFORM_OP>, size, stream, TRANSFORM_OP() \
 )
 
@@ -146,6 +146,8 @@ int main(int argc, char *argv[])
     benchmark::Initialize(&argc, argv);
     const size_t size = parser.get<size_t>("size");
     const int trials = parser.get<int>("trials");
+
+    std::cout << "benchmark_device_transform" << std::endl;
 
     // HIP
     hipStream_t stream = 0; // default

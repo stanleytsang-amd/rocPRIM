@@ -273,7 +273,7 @@ constexpr rocprim::block_scan_algorithm reduce_then_scan = rocprim::block_scan_a
 #define CREATE_BENCHMARK(EXCL, T, SCAN_OP) \
 benchmark::RegisterBenchmark( \
     (std::string(EXCL ? "exclusive_scan" : "inclusive_scan") + \
-    ("<" #T ", " #SCAN_OP ">")).c_str(), \
+    ("<Datatype:" #T ",Scan Op:" #SCAN_OP ">")).c_str(), \
     run_benchmark<EXCL, T, SCAN_OP, rocprim::default_config>, size, stream, SCAN_OP() \
 ),
 
@@ -290,6 +290,8 @@ int main(int argc, char *argv[])
     benchmark::Initialize(&argc, argv);
     const size_t size = parser.get<size_t>("size");
     const int trials = parser.get<int>("trials");
+
+    std::cout << "benchmark_device_scan" << std::endl;
 
     // HIP
     hipStream_t stream = 0; // default

@@ -251,7 +251,7 @@ void run_benchmark(benchmark::State& state, benchmark_kinds benchmark_kind, hipS
 
 #define CREATE_BENCHMARK_ITEMS(T, BS, ITEMS) \
 benchmark::RegisterBenchmark( \
-    (std::string("block_sort<" #T ", " #BS ", " #ITEMS ">.") + name).c_str(), \
+    (std::string("block_sort<Datatype:" #T ",Block Size:" #BS ",Items Per Thread:" #ITEMS ">.SubAlgorithm Name:") + name).c_str(), \
     run_benchmark<T, BS, ITEMS>, \
     benchmark_kind, stream, size \
 )
@@ -286,7 +286,7 @@ void add_benchmarks(benchmark_kinds benchmark_kind,
         CREATE_BENCHMARK_ITEMS(int, 512, 8),
         CREATE_BENCHMARK_ITEMS(int, 1024, 4),
         CREATE_BENCHMARK_ITEMS(int, 1024, 8),
-        
+
         CREATE_BENCHMARK_ITEMS(int8_t, 64, 1),
         CREATE_BENCHMARK_ITEMS(int8_t, 64,  2),
         CREATE_BENCHMARK_ITEMS(int8_t, 128, 1),
@@ -385,6 +385,8 @@ int main(int argc, char *argv[])
     benchmark::Initialize(&argc, argv);
     const size_t size = parser.get<size_t>("size");
     const int trials = parser.get<int>("trials");
+
+    std::cout << "benchmark_block_sort" << std::endl;
 
     // HIP
     hipStream_t stream = 0; // default

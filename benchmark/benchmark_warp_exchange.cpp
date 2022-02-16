@@ -104,7 +104,7 @@ void run_benchmark(benchmark::State& state, hipStream_t stream, size_t N)
     for(auto _ : state)
     {
         auto start = std::chrono::high_resolution_clock::now();
-        
+
         hipLaunchKernelGGL(
             HIP_KERNEL_NAME(warp_exchange_kernel<
                     T,
@@ -117,7 +117,7 @@ void run_benchmark(benchmark::State& state, hipStream_t stream, size_t N)
             dim3(size / items_per_block), dim3(BlockSize), 0, stream,
             d_output, trials
         );
-        
+
         HIP_CHECK(hipPeekAtLastError())
         HIP_CHECK(hipDeviceSynchronize());
         auto end = std::chrono::high_resolution_clock::now();
@@ -133,7 +133,7 @@ void run_benchmark(benchmark::State& state, hipStream_t stream, size_t N)
 
 #define CREATE_BENCHMARK(T, BS, IT, WS, OP) \
 benchmark::RegisterBenchmark( \
-    "warp_exchange_striped_to_blocked<"#T", "#BS", "#IT", "#WS", "#OP">.", \
+    "warp_exchange_striped_to_blocked<Datatype:"#T",Block Size:"#BS",Items Per Thread:"#IT",Warp Size:"#WS",Op:"#OP">.", \
     &run_benchmark<T, BS, IT, WS, OP>, \
     stream, size \
 )
@@ -213,6 +213,8 @@ int main(int argc, char *argv[])
     benchmark::Initialize(&argc, argv);
     const size_t size = parser.get<size_t>("size");
     const int trials = parser.get<int>("trials");
+
+    std::cout << "benchmark_warp_exchange" << std::endl;
 
     // HIP
     hipStream_t stream = 0; // default

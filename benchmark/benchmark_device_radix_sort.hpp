@@ -285,7 +285,7 @@ void run_sort_pairs_benchmark(benchmark::State& state,
     { \
         benchmarks.push_back( \
             benchmark::RegisterBenchmark( \
-                (std::string("sort_keys") + "<" #Key ">").c_str(), \
+                (std::string("sort_keys") + "<Key Type:" #Key ">").c_str(), \
                 [=](benchmark::State& state) { run_sort_keys_benchmark<Key, rocprim::default_config>(state, stream, size); } \
             ) \
         ); \
@@ -295,7 +295,7 @@ void run_sort_pairs_benchmark(benchmark::State& state,
     { \
         benchmarks.push_back( \
             benchmark::RegisterBenchmark( \
-                (std::string("sort_pairs") + "<" #Key ", " #Value">").c_str(), \
+                (std::string("sort_pairs") + "<Key Type:" #Key ",Value Type:" #Value">").c_str(), \
                 [=](benchmark::State& state) { run_sort_pairs_benchmark<Key, Value, rocprim::default_config>(state, stream, size); } \
             ) \
         ); \

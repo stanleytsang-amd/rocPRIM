@@ -60,7 +60,7 @@ __launch_bounds__(BlockSize)
 void warp_sort_kernel(K* input_keys, K* output_keys)
 {
     const unsigned int flat_tid = threadIdx.x;
-    const unsigned int items_per_block = BlockSize * ItemsPerThread; 
+    const unsigned int items_per_block = BlockSize * ItemsPerThread;
     const unsigned int block_offset = blockIdx.x * items_per_block;
 
     K keys[ItemsPerThread];
@@ -78,7 +78,7 @@ __launch_bounds__(BlockSize)
 void warp_sort_by_key_kernel(K* input_keys, V* input_values, K* output_keys, V* output_values)
 {
     const unsigned int flat_tid = threadIdx.x;
-    const unsigned int items_per_block = BlockSize * ItemsPerThread; 
+    const unsigned int items_per_block = BlockSize * ItemsPerThread;
     const unsigned int block_offset = blockIdx.x * items_per_block;
 
     K keys[ItemsPerThread];
@@ -203,14 +203,14 @@ void run_benchmark(benchmark::State& state, hipStream_t stream, size_t size)
 
 #define CREATE_SORT_BENCHMARK(K, BS, WS, IPT) \
     benchmark::RegisterBenchmark( \
-        "warp_sort<"#K", "#BS", "#WS", "#IPT">.sort(only keys)", \
+        "warp_sort<Datatype:"#K",Block Size:"#BS",Warp Size:"#WS",Items Per Thread:"#IPT">.sort(only keys)", \
         run_benchmark<K, BS, WS, IPT>, \
         stream, size \
     )
 
 #define CREATE_SORTBYKEY_BENCHMARK(K, V, BS, WS, IPT) \
     benchmark::RegisterBenchmark( \
-        "warp_sort<"#K", "#BS", "#WS", "#IPT", "#V">.sort", \
+        "warp_sort<Datatype:"#K",Block Size:"#BS",Warp Size:"#WS",Items Per Thread:"#IPT",Value:"#V">.sort", \
         run_benchmark<K, BS, WS, IPT, V, true>, \
         stream, size \
     )

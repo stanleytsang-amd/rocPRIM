@@ -453,7 +453,7 @@ void add_sort_keys_benchmarks(std::vector<benchmark::internal::Benchmark*>& benc
 
     static_for_each<merge_block_size_range, create_benchmarks<uint8_t>::sweep_config_3d>(
         benchmarks, stream, size);
-    
+
     static_for_each<merge_block_size_range, create_benchmarks<rocprim::half>::sweep_config_3d>(
         benchmarks, stream, size);
 
@@ -485,7 +485,7 @@ void add_sort_pairs_benchmarks(std::vector<benchmark::internal::Benchmark*>& ben
 
     static_for_each<merge_block_size_range, create_benchmarks<uint8_t, uint8_t>::sweep_config_3d>(
         benchmarks, stream, size);
-    
+
     static_for_each<merge_block_size_range, create_benchmarks<rocprim::half, rocprim::half>::sweep_config_3d>(
         benchmarks, stream, size);
 
@@ -580,13 +580,19 @@ int main(int argc, char *argv[])
     cli::Parser parser(argc, argv);
     parser.set_optional<size_t>("size", "size", DEFAULT_N, "number of values");
     parser.set_optional<int>("trials", "trials", -1, "number of iterations");
+    parser.set_optional<bool>("show_input_labels", "show_input_labels", false, "show labels for algorithm inputs");
     parser.run_and_exit_if_error();
 
     // Parse argv
     benchmark::Initialize(&argc, argv);
     const size_t size = parser.get<size_t>("size");
     const int trials = parser.get<int>("trials");
+    const bool show_labels = parser.get<bool>("show_input_labels");
 
+    if (show_labels)
+    {
+        std::cout << "Input labels:key,value" << std::endl;
+    }
     // HIP
     hipStream_t stream = 0; // default
     hipDeviceProp_t devProp;
