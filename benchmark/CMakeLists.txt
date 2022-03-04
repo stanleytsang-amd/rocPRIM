@@ -85,6 +85,7 @@ endfunction()
 # Benchmarks
 # ****************************************************************************
 
+add_rocprim_benchmark(benchmark_block_adjacent_difference.cpp)
 add_rocprim_benchmark(benchmark_block_discontinuity.cpp)
 add_rocprim_benchmark(benchmark_block_exchange.cpp)
 add_rocprim_benchmark(benchmark_block_histogram.cpp)
