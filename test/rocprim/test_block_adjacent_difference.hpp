@@ -40,6 +40,12 @@ typed_test_def(RocprimBlockAdjacentDifference, name_suffix, SubtractLeft)
 
     constexpr size_t block_size = TestFixture::params::block_size;
 
+    // clang-format off
+    static_for<0, 2,       T, T, op_type_1, 3, block_size>::run();
+	std::cout << "Passed 1st static for" << std::endl;
+    static_for<2, 4,       T, T, op_type_2, 3, block_size>::run();
+	std::cout << "Passed 2nd static for" << std::endl;	
     static_for<4, n_items, T, T, op_type_3, 3, block_size>::run();
+	std::cout << "Passed 3rd static for" << std::endl;	
     // clang-format on
 }
