@@ -70,4 +70,4 @@ endfunction()
 # rocPRIM examples
 # ****************************************************************************
 
-add_rocprim_example(example_temporary_storage.cpp)
+#add_rocprim_example(example_temporary_storage.cpp)
