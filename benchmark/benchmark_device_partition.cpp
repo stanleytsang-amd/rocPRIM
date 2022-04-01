@@ -385,7 +385,7 @@ void run_three_way_benchmark(benchmark::State& state,
 
 #define CREATE_PARTITION_FLAGGED_BENCHMARK(T, F, p) \
 benchmark::RegisterBenchmark( \
-    ("partition(flags)<Datatype:" #T ",Flag Type" #F ",Output Datatype:"#T",Selected Count Output Datatype:unsigned int>(Probability:" #p")"), \
+    ("partition(flags)<Datatype:" #T ",Flag Type:" #F ",Output Datatype:"#T",Selected Count Output Datatype:unsigned int>(Probability:" #p")"), \
     run_flagged_benchmark<T, F>, size, stream, p \
 )
 

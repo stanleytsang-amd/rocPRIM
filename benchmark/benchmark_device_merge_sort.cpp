@@ -515,7 +515,7 @@ void add_sort_pairs_benchmarks(std::vector<benchmark::internal::Benchmark*>& ben
 
 #define CREATE_SORT_KEYS_BENCHMARK(Key) \
 benchmark::RegisterBenchmark( \
-    (std::string("sort_keys") + "<" #Key ">").c_str(), \
+    (std::string("sort_keys") + "<Key Type:" #Key ">").c_str(), \
     [=](benchmark::State& state) { run_sort_keys_benchmark<Key>(state, stream, size); } \
 )
 
@@ -538,7 +538,7 @@ void add_sort_keys_benchmarks(std::vector<benchmark::internal::Benchmark*>& benc
 
 #define CREATE_SORT_PAIRS_BENCHMARK(Key, Value) \
 benchmark::RegisterBenchmark( \
-    (std::string("sort_pairs") + "<" #Key ", " #Value ">").c_str(), \
+    (std::string("sort_pairs") + "<Key Type:" #Key ",Value Type:" #Value ">").c_str(), \
     [=](benchmark::State& state) { run_sort_pairs_benchmark<Key, Value>(state, stream, size); } \
 )
 
