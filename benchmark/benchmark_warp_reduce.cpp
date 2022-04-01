@@ -209,7 +209,7 @@ void run_benchmark(benchmark::State& state, hipStream_t stream, size_t N)
 
 #define CREATE_BENCHMARK(T, WS, BS) \
 benchmark::RegisterBenchmark( \
-    (std::string("warp_reduce<Datatype:" #T ",Warp Size: " #WS ",Block Size:" #BS ">.") + name).c_str(), \
+    (std::string("warp_reduce<Datatype:" #T ",Warp Size: " #WS ",Block Size:" #BS ">.SubAlgorithm Name:") + name).c_str(), \
     run_benchmark<AllReduce, Segmented, T, WS, BS>, \
     stream, size \
 )
