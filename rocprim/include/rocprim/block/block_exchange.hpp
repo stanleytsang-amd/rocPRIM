@@ -464,6 +464,7 @@ public:
         {
             output[i] = storage_.buffer[index(flat_id * ItemsPerThread + i)];
         }
+		//if (threadIdx.x == 0) printf("in scatter_to_blocked %d\n", output[0]);
     }
 
     /// \brief Scatters items to a striped arrangement based on their ranks

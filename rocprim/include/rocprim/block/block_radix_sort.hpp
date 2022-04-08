@@ -880,6 +880,7 @@ private:
                    unsigned int begin_bit,
                    unsigned int end_bit)
     {
+	if (threadIdx.x == 0 && blockIdx.x == 0) printf ("sort_impl 1\n");		
         using key_codec = ::rocprim::detail::radix_key_codec<Key, Descending>;
         storage_type_& storage_ = storage.get();
 
@@ -932,6 +933,7 @@ private:
         {
             keys[i] = key_codec::decode(bit_keys[i]);
         }
+		
     }
 
     ROCPRIM_DEVICE ROCPRIM_INLINE
@@ -950,6 +952,7 @@ private:
                          SortedValue (&values)[ItemsPerThread],
                          const unsigned int (&ranks)[ItemsPerThread])
     {
+		if (threadIdx.x == 0 && blockIdx.x == 0) printf("exchange values 1\n");
         storage_type_& storage_ = storage.get();
         ::rocprim::syncthreads(); // Storage will be reused (union), synchronization is needed
         values_exchange_type().scatter_to_blocked(values, values, ranks, storage_.values_exchange);
@@ -960,6 +963,7 @@ private:
                          empty_type (&values)[ItemsPerThread],
                          const unsigned int (&ranks)[ItemsPerThread])
     {
+		if (threadIdx.x == 0 && blockIdx.x == 0) printf("exchange values 2\n");
         (void) storage;
         (void) values;
         (void) ranks;

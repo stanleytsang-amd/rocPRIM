@@ -172,6 +172,8 @@ hipError_t segmented_radix_sort_impl(void * temporary_storage,
         std::cout << "iterations " << iterations << '\n';
         std::cout << "long_iterations " << long_iterations << '\n';
         std::cout << "short_iterations " << short_iterations << '\n';
+		std::cout << "config long bits " << config::long_radix_bits << std::endl;
+		std::cout << "config short bits " << config::short_radix_bits << std::endl;
         hipError_t error = hipStreamSynchronize(stream);
         if(error != hipSuccess) return error;
     }

@@ -93,6 +93,7 @@ public:
               unsigned int end_bit,
               storage_type& storage)
     {
+		if (threadIdx.x == 0 && blockIdx.x == 0) printf("1\n");
         // Handle cases when (end_bit - bit) is not divisible by radix_bits, i.e. the last
         // iteration has a shorter mask.
         const unsigned int current_radix_bits = ::rocprim::min(RadixBits, end_bit - bit);
@@ -159,6 +160,7 @@ public:
               unsigned int end_bit,
               storage_type& storage)
     {
+				if (threadIdx.x == 0 && blockIdx.x == 0) printf("2\n");
         // Handle cases when (end_bit - bit) is not divisible by radix_bits, i.e. the last
         // iteration has a shorter mask.
         const unsigned int current_radix_bits = ::rocprim::min(RadixBits, end_bit - bit);
@@ -230,6 +232,7 @@ private:
               unsigned int current_radix_bits,
               storage_type& storage)
     {
+				if (threadIdx.x == 0 && blockIdx.x == 0) printf("3\n");
         unsigned int digit_count;
         count_helper_type().count_digits(
             keys_input,
@@ -318,6 +321,7 @@ public:
               unsigned int end_bit,
               storage_type& storage)
     {
+				if (threadIdx.x == 0 && blockIdx.x == 0) printf("4\n");
         if(to_output)
         {
             sort(
@@ -353,6 +357,7 @@ public:
               unsigned int end_bit,
               storage_type& storage)
     {
+				if (threadIdx.x == 0 && blockIdx.x == 0) printf("5\n");
         sort(
             keys_input, (to_output ? keys_output : keys_tmp), values_input, (to_output ? values_output : values_tmp),
             begin_offset, end_offset,
@@ -378,6 +383,7 @@ public:
               unsigned int end_bit,
               storage_type& storage)
     {
+				if (threadIdx.x == 0 && blockIdx.x == 0) printf("6\n");
         constexpr unsigned int items_per_block = BlockSize * ItemsPerThread;
 
         using shorter_single_block_helper = segmented_radix_sort_single_block_helper<
@@ -505,7 +511,7 @@ void segmented_sort(KeysInputIterator keys_input,
         Descending
     >;
     using long_radix_helper_type = segmented_radix_sort_helper<
-        key_type, value_type,
+        key_type, value_type,+
         ::rocprim::device_warp_size(), block_size, items_per_thread,
         long_radix_bits, Descending
     >;
@@ -526,7 +532,13 @@ void segmented_sort(KeysInputIterator keys_input,
 
     const unsigned int begin_offset = begin_offsets[segment_id];
     const unsigned int end_offset = end_offsets[segment_id];
-
+	if (threadIdx.x == 0 && blockIdx.x == 0)
+	{
+		printf("GPU %d %d %d %d %d %d %d %d %d\n", long_radix_bits, short_radix_bits, block_size, items_per_thread, items_per_block,
+			begin_offset, end_offset, long_iterations, short_iterations);
+		if (Descending == true) printf("true\n");
+		else printf("false\n");
+	}
     // Empty segment
     if(end_offset <= begin_offset)
     {

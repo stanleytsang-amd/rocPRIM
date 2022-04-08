@@ -55,6 +55,7 @@ void sort_block(SortType sorter,
                 unsigned int begin_bit,
                 unsigned int end_bit)
 {
+	if (threadIdx.x == 0 && blockIdx.x == 0) printf ("sort_block 1\n");
     if(Descending)
     {
         sorter.sort_desc(keys, values, storage, begin_bit, end_bit);
@@ -63,6 +64,7 @@ void sort_block(SortType sorter,
     {
         sorter.sort(keys, values, storage, begin_bit, end_bit);
     }
+	if (threadIdx.x == 0 && blockIdx.x == 0) printf ("value %d\n", values[0]);
 }
 
 template<bool Descending = false, class SortType, class SortKey, unsigned int ItemsPerThread>
@@ -74,6 +76,7 @@ void sort_block(SortType sorter,
                 unsigned int begin_bit,
                 unsigned int end_bit)
 {
+	if (threadIdx.x == 0 && blockIdx.x == 0) printf ("sort_block 2\n");	
     (void) values;
     if(Descending)
     {
@@ -82,7 +85,7 @@ void sort_block(SortType sorter,
     else
     {
         sorter.sort(keys, storage, begin_bit, end_bit);
-    }
+    }	
 }
 
 template<
