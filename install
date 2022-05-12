@@ -22,6 +22,7 @@ function display_help()
     echo "    [--hip-clang] build library for amdgpu backend using hip-clang"
     echo "    [--address-sanitizer] build with address sanitizer enabled"
     echo "    [--rm-legacy-include-dir] Remove legacy include dir Packaging added for file/folder reorg backward compatibility"
+    echo "    [--prefix] Install rocPRIM to custom location"
 }
 
 
@@ -42,7 +43,7 @@ rocm_path=/opt/rocm
 build_relocatable=false
 build_address_sanitizer=false
 build_freorg_bkwdcomp=true
-
+install_path=${rocm_path}
 # #################################################
 # Parameter parsing
 # #################################################
@@ -50,7 +51,7 @@ build_freorg_bkwdcomp=true
 # check if we have a modern version of getopt that can handle whitespace and long parameters
 getopt -T
 if [[ $? -eq 4 ]]; then
-    GETOPT_PARSE=$(getopt --name "${0}" --longoptions help,install,clients,debug,hip-clang,test,benchmark,package,relocatable,relwithdebinfo,codecoverage,address-sanitizer,rm-legacy-include-dir --options hicdtbpgrk -- "$@")
+    GETOPT_PARSE=$(getopt --name "${0}" --longoptions help,install,clients,debug,hip-clang,test,benchmark,package,relocatable,relwithdebinfo,codecoverage,address-sanitizer,rm-legacy-include-dir,prefix: --options hicdtbpgrk -- "$@")
 else
     echo "Need a new version of getopt"
     exit 1
@@ -66,7 +67,7 @@ eval set -- "${GETOPT_PARSE}"
 check_exit_code( )
 {
     if (( $1 != 0 )); then
-	exit $1
+        exit $1
     fi
 }
 
@@ -87,7 +88,7 @@ while true; do
             shift ;;
         -c|--clients)
             build_clients=true
-	    build_benchmarks=true
+            build_benchmarks=true
             shift ;;
         -g|--debug)
             build_release=false
@@ -103,8 +104,8 @@ while true; do
             build_codecoverage=true
             shift ;;
         -k|--relwithdebinfo)
-	    build_release=false
-	    build_release_debug=true
+            build_release=false
+            build_release_debug=true
             build_type=RelWithDebInfo
             shift ;;
         --hip-clang)
@@ -116,6 +117,9 @@ while true; do
         --rm-legacy-include-dir)
             build_freorg_bkwdcomp=false
             shift ;;
+        --prefix)
+            install_path=${2}
+            shift 2 ;;
         --) shift ; break ;;
         *)  echo "Unexpected command line parameter received; aborting";
             exit 1
@@ -185,7 +189,6 @@ if [[ "${build_codecoverage}" == true ]]; then
     codecoverage="ON"
 fi
 
-
 if [[ "${build_relocatable}" == true ]]; then
     CXX=${rocm_path}/bin/${compiler} ${cmake_executable} ${cmake_common_options} \
        -DCMAKE_INSTALL_PREFIX=${rocm_path} -DBUILD_BENCHMARK=${benchmark} \
@@ -193,7 +196,7 @@ if [[ "${build_relocatable}" == true ]]; then
        -DBUILD_BENCHMARK=${benchmark} -DBUILD_TEST=${clients} \
        -DCMAKE_MODULE_PATH="${rocm_path}/lib/cmake/hip ${rocm_path}/hip/cmake" ../../.     # or cmake-gui ../.
 else
-    CXX=${rocm_path}/bin/${compiler} ${cmake_executable} ${cmake_common_options} -DBUILD_BENCHMARK=${benchmark} \
+    CXX=${rocm_path}/bin/${compiler} ${cmake_executable} ${cmake_common_options} -DCMAKE_INSTALL_PREFIX=${install_path} -DCMAKE_PREFIX_PATH=${install_path} -DBUILD_BENCHMARK=${benchmark} \
        -DBUILD_TEST=${clients} -DCMAKE_BUILD_TYPE=${build_type} -DBUILD_CODE_COVERAGE=${codecoverage}  ../../. # or cmake-gui ../.
 fi
 
