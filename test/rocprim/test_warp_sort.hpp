@@ -66,6 +66,7 @@ typed_test_def(RocprimWarpSortShuffleBasedTests, name_suffix, SortKeyInt)
         SCOPED_TRACE(testing::Message() << "with seed= " << seed_value);
 
         // Generate data
+        // NOTE: CHANGE These two lines to control how to populate the test data
         std::vector<T> output_key = test_utils::get_random_data<T>(size, 0, 100, seed_value);
         std::vector<T> output_value = test_utils::get_random_data<T>(size, 0, 100, seed_value);
 

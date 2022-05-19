@@ -143,7 +143,7 @@ typedef ::testing::Types<
     warp_sort_param_type(int8_t, 2),
     warp_sort_param_type(int, 4),
     warp_sort_param_type(test_utils::custom_test_type<int>, 4),*/
-    warp_sort_param_type(uint8_t, 4),
+    warp_sort_param_type(uint8_t, 4), // Change second param to control vector size
     warp_sort_param_type(int8_t, 4)
 > WarpSortParamsIntegralMultiThread;
 
