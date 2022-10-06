@@ -104,7 +104,7 @@ if(BUILD_TEST)
   #        will be duplicately defined.
   if(NOT DEPENDENCIES_FORCE_DOWNLOAD)
     # Google Test (https://github.com/google/googletest)
-    find_package(GTest QUIET)
+    #    find_package(GTest QUIET)
   endif()
 
   if(NOT TARGET GTest::GTest AND NOT TARGET GTest::gtest)

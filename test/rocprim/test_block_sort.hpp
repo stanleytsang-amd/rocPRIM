@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include <unistd.h>
+#include <limits.h>
+#include <fstream>
 #include "test_utils_sort_comparator.hpp"
 block_sort_test_suite_type_def(suite_name, name_suffix)
 
@@ -54,8 +57,8 @@ void TestSortKeyValue()
 
     for(size_t seed_index = 0; seed_index < random_seeds_count + seed_size; seed_index++)
     {
-        unsigned int seed_value
-            = seed_index < random_seeds_count ? rand() : seeds[seed_index - random_seeds_count];
+        unsigned int seed_value = 1324681962;
+            //= seed_index < random_seeds_count ? rand() : seeds[seed_index - random_seeds_count];
         SCOPED_TRACE(testing::Message() << "with seed= " << seed_value);
 
         // Generate data
@@ -150,10 +153,58 @@ void TestSortKeyValue()
             std::sort(expected_value.begin() + i, expected_value.begin() + j, value_op);
             i = j;
         }
-
-        test_utils::assert_eq(output_key, expected_key);
-        test_utils::assert_eq(output_value, expected_value);
-
+        bool pass1 = true;
+        bool pass2 = true;
+        test_utils::assert_eq2(output_key, expected_key, pass1);
+        test_utils::assert_eq2(output_value, expected_value, pass2);
+        if (pass1 == false)
+        {
+            char hostname[HOST_NAME_MAX];
+            gethostname(hostname, HOST_NAME_MAX);
+            std::string hostnamestr(hostname);
+            hostnamestr.append("_key_output.txt");
+            std::ofstream f(hostnamestr, std::ios_base::app);
+            for(auto i = output_key.begin(); i != output_key.end(); ++i)
+            {
+                f << *i << '\n';
+            }
+        }
+        if (pass1 == false)
+        {
+            char hostname[HOST_NAME_MAX];
+            gethostname(hostname, HOST_NAME_MAX);
+            std::string hostnamestr(hostname);
+            hostnamestr.append("_key_expected.txt");
+            std::ofstream f(hostnamestr, std::ios_base::app);
+            for(auto i = expected_key.begin(); i != expected_key.end(); ++i)
+            {
+                f << *i << '\n';
+            }
+        }        
+        if (pass2 == false)
+        {
+            char hostname[HOST_NAME_MAX];
+            gethostname(hostname, HOST_NAME_MAX);
+            std::string hostnamestr(hostname);
+            hostnamestr.append("_val_output.txt");
+            std::ofstream f(hostnamestr, std::ios_base::app);
+            for(auto i = output_value.begin(); i != output_value.end(); ++i)
+            {
+                f << *i << '\n';
+            }
+        }
+        if (pass2 == false)
+        {
+            char hostname[HOST_NAME_MAX];
+            gethostname(hostname, HOST_NAME_MAX);
+            std::string hostnamestr(hostname);
+            hostnamestr.append("_val_expected.txt");
+            std::ofstream f(hostnamestr, std::ios_base::app);
+            for(auto i = expected_value.begin(); i != expected_value.end(); ++i)
+            {
+                f << *i << '\n';
+            }
+        }        
         HIP_CHECK(hipFree(device_value_output));
         HIP_CHECK(hipFree(device_key_output));
     }

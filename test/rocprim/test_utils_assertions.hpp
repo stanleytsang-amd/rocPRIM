@@ -54,6 +54,21 @@ void assert_eq(const std::vector<T>& result, const std::vector<T>& expected, con
     }
 }
 
+template<class T>
+void assert_eq2(const std::vector<T>& result, const std::vector<T>& expected, bool& pass, const size_t max_length = SIZE_MAX)
+{
+    if(max_length == SIZE_MAX || max_length > expected.size()) ASSERT_EQ(result.size(), expected.size());
+    for(size_t i = 0; i < std::min(result.size(), max_length); i++)
+    {
+        if(bit_equal(result[i], expected[i])) continue; // Check bitwise equality for +NaN, -NaN, +0.0, -0.0, +inf, -inf.
+        else
+        {
+            pass = false;
+            ASSERT_EQ(result[i], expected[i]) << "where index = " << i;
+        }
+    }
+}
+
 template<>
 inline void assert_eq<rocprim::half>(const std::vector<rocprim::half>& result, const std::vector<rocprim::half>& expected, const size_t max_length)
 {
