@@ -68,6 +68,35 @@ void assert_eq2(const std::vector<T>& result, const std::vector<T>& expected, bo
         }
     }
 }
+template<>
+inline void assert_eq2<rocprim::half>(const std::vector<rocprim::half>& result, const std::vector<rocprim::half>& expected, bool& pass, const size_t max_length)
+{
+    if(max_length == SIZE_MAX || max_length > expected.size()) ASSERT_EQ(result.size(), expected.size());
+    for(size_t i = 0; i < std::min(result.size(), max_length); i++)
+    {
+        if(bit_equal(result[i], expected[i])) continue; // Check bitwise equality for +NaN, -NaN, +0.0, -0.0, +inf, -inf.
+        else
+        {
+            pass = false;
+            ASSERT_EQ(half_to_native(result[i]), half_to_native(expected[i])) << "where index = " << i;
+        }
+    }
+}
+
+template<>
+inline void assert_eq2<rocprim::bfloat16>(const std::vector<rocprim::bfloat16>& result, const std::vector<rocprim::bfloat16>& expected, bool& pass, const size_t max_length)
+{
+    if(max_length == SIZE_MAX || max_length > expected.size()) ASSERT_EQ(result.size(), expected.size());
+    for(size_t i = 0; i < std::min(result.size(), max_length); i++)
+    {
+        if(bit_equal(result[i], expected[i])) continue; // Check bitwise equality for +NaN, -NaN, +0.0, -0.0, +inf, -inf.
+        else
+        {
+            pass = false;        
+            ASSERT_EQ(bfloat16_to_native(result[i]), bfloat16_to_native(expected[i])) << "where index = " << i;
+        }
+    }
+}
 
 template<>
 inline void assert_eq<rocprim::half>(const std::vector<rocprim::half>& result, const std::vector<rocprim::half>& expected, const size_t max_length)
