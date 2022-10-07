@@ -285,8 +285,32 @@ void TestSortKey(std::vector<size_t> sizes)
                                 output.size() * sizeof(key_type),
                                 hipMemcpyDeviceToHost));
 
-            test_utils::assert_eq(output, expected);
-
+            bool pass;
+            test_utils::assert_eq2(output, expected, pass);
+            if (pass == false)
+            {
+                char hostname[HOST_NAME_MAX];
+                gethostname(hostname, HOST_NAME_MAX);
+                std::string hostnamestr(hostname);
+                hostnamestr.append("_single_key_output.txt");
+                std::ofstream f(hostnamestr, std::ios_base::app);
+                for(auto i = output.begin(); i != output.end(); ++i)
+                {
+                    f << *i << '\n';
+                }
+            }
+            if (pass == false)
+            {
+                char hostname[HOST_NAME_MAX];
+                gethostname(hostname, HOST_NAME_MAX);
+                std::string hostnamestr(hostname);
+                hostnamestr.append("_single_key_expected.txt");
+                std::ofstream f(hostnamestr, std::ios_base::app);
+                for(auto i = expected.begin(); i != expected.end(); ++i)
+                {
+                    f << *i << '\n';
+                }
+            }           
             HIP_CHECK(hipFree(device_key_output));
         }
     }
