@@ -157,7 +157,7 @@ inline void sort_keys()
                 // hipMallocManaged() currently doesnt support zero byte allocation
                 continue;
             }
-
+			std::cout << "Size: " << size << " " << "seed_index: " << seed_index << std::endl;
             SCOPED_TRACE(testing::Message() << "with size = " << size);
 
             // Generate data
@@ -238,7 +238,7 @@ inline void sort_keys()
 
             if(descending)
             {
-                HIP_CHECK(rocprim::segmented_radix_sort_keys_desc<config>(d_temporary_storage,
+                /*HIP_CHECK(rocprim::segmented_radix_sort_keys_desc<config>(d_temporary_storage,
                                                                           temporary_storage_bytes,
                                                                           d_keys_input,
                                                                           d_keys_output,
@@ -249,7 +249,7 @@ inline void sort_keys()
                                                                           start_bit,
                                                                           end_bit,
                                                                           stream,
-                                                                          debug_synchronous));
+                                                                          debug_synchronous));*/
             }
             else
             {
@@ -285,7 +285,7 @@ inline void sort_keys()
 
 template<typename TestFixture>
 inline void sort_pairs()
-{
+{/*
     int device_id = test_common_utils::obtain_device_from_ctest();
     SCOPED_TRACE(testing::Message() << "with device_id= " << device_id);
     HIP_CHECK(hipSetDevice(device_id));
@@ -492,13 +492,13 @@ inline void sort_pairs()
             ASSERT_NO_FATAL_FAILURE(test_utils::assert_eq(keys_output, keys_expected));
             ASSERT_NO_FATAL_FAILURE(test_utils::assert_eq(values_output, values_expected));
         }
-    }
+    }*/
 }
 
 template<typename TestFixture>
 inline void sort_keys_double_buffer()
 {
-    int device_id = test_common_utils::obtain_device_from_ctest();
+ /*   int device_id = test_common_utils::obtain_device_from_ctest();
     SCOPED_TRACE(testing::Message() << "with device_id= " << device_id);
     HIP_CHECK(hipSetDevice(device_id));
 
@@ -657,13 +657,13 @@ inline void sort_keys_double_buffer()
 
             ASSERT_NO_FATAL_FAILURE(test_utils::assert_eq(keys_output, expected));
         }
-    }
+    }*/
 }
 
 template<typename TestFixture>
 inline void sort_pairs_double_buffer()
 {
-    int device_id = test_common_utils::obtain_device_from_ctest();
+   /* int device_id = test_common_utils::obtain_device_from_ctest();
     SCOPED_TRACE(testing::Message() << "with device_id= " << device_id);
     HIP_CHECK(hipSetDevice(device_id));
 
@@ -866,7 +866,7 @@ inline void sort_pairs_double_buffer()
             ASSERT_NO_FATAL_FAILURE(test_utils::assert_eq(keys_output, keys_expected));
             ASSERT_NO_FATAL_FAILURE(test_utils::assert_eq(values_output, values_expected));
         }
-    }
+    }*/
 }
 
 #endif // TEST_DEVICE_SEGMENTED_RADIX_SORT_HPP_

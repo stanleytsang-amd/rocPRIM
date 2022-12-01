@@ -133,7 +133,7 @@ def config_cmd():
     print( cmake_options )
 
     # clean
-    delete_dir( build_path )
+    #delete_dir( build_path )
 
     create_dir( os.path.join(build_path, "clients") )
     os.chdir( build_path )

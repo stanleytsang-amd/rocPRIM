@@ -94,7 +94,7 @@ if(BUILD_FILE_REORG_BACKWARD_COMPATIBILITY)
     PATTERNS *.hpp
   )
 endif()
-
+add_compile_options(-save-temps)
 if(BUILD_CODE_COVERAGE)
   add_compile_options(-fprofile-arcs -ftest-coverage)
   add_link_options(--coverage)
