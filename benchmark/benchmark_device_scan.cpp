@@ -101,8 +101,8 @@ int main(int argc, char* argv[])
     using custom_float2  = custom_type<float, float>;
     using custom_double2 = custom_type<double, double>;
 
-    CREATE_BENCHMARK(int, rocprim::plus<int>)
-    CREATE_BENCHMARK(float, rocprim::plus<float>)
+    //CREATE_BENCHMARK(int, rocprim::plus<int>)
+    //CREATE_BENCHMARK(float, rocprim::plus<float>)
     CREATE_BENCHMARK(double, rocprim::plus<double>)
     CREATE_BENCHMARK(long long, rocprim::plus<long long>)
     CREATE_BENCHMARK(float2, rocprim::plus<float2>)

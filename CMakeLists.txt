@@ -79,7 +79,7 @@ if(NOT USE_HIP_CPU)
 
   if(GPU_TARGETS STREQUAL "all")
     rocm_check_target_ids(DEFAULT_AMDGPU_TARGETS
-      TARGETS "gfx803;gfx900:xnack-;gfx906:xnack-;gfx908:xnack-;gfx90a:xnack-;gfx90a:xnack+;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101;gfx1102"
+      TARGETS "gfx940;gfx941;gfx942"
     )
     set(GPU_TARGETS "${DEFAULT_AMDGPU_TARGETS}" CACHE STRING "GPU architectures to compile for" FORCE)
   endif()
@@ -107,7 +107,7 @@ if(BUILD_CODE_COVERAGE)
   add_compile_options(-fprofile-arcs -ftest-coverage)
   add_link_options(--coverage)
 endif()
-
+add_compile_options(-ggdb -O0)
 if(USE_HIP_CPU)
   # Get dependencies
   include(cmake/Dependencies.cmake)

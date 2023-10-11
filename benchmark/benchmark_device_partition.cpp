@@ -516,37 +516,6 @@ void run_three_way_benchmark(benchmark::State& state,
     hipFree(d_temp_storage);
 }
 
-#define CREATE_PARTITION_FLAGGED_BENCHMARK(T, F, p)                                 \
-    benchmark::RegisterBenchmark(                                                   \
-        bench_naming::format_name("{lvl:device,algo:partition,key_type:" #T         \
-                                  ",subalgo:flags,flag_type:" #F ",probability:" #p \
-                                  ",cfg:default_config}")                           \
-            .c_str(),                                                               \
-        run_flagged_benchmark<T, F>,                                                \
-        size,                                                                       \
-        stream,                                                                     \
-        p)
-
-#define CREATE_PARTITION_IF_BENCHMARK(T, p)                                             \
-    benchmark::RegisterBenchmark(                                                       \
-        bench_naming::format_name("{lvl:device,algo:partition,key_type:" #T             \
-                                  ",subalgo:if,probability:" #p ",cfg:default_config}") \
-            .c_str(),                                                                   \
-        run_if_benchmark<T>,                                                            \
-        size,                                                                           \
-        stream,                                                                         \
-        p)
-
-#define CREATE_PARTITION_TWO_WAY_BENCHMARK(T, p)                                             \
-    benchmark::RegisterBenchmark(                                                            \
-        bench_naming::format_name("{lvl:device,algo:partition,key_type:" #T                  \
-                                  ",subalgo:two_way,probability:" #p ",cfg:default_config}") \
-            .c_str(),                                                                        \
-        run_two_way_benchmark<T>,                                                            \
-        size,                                                                                \
-        stream,                                                                              \
-        p)
-
 #define CREATE_PARTITION_THREE_WAY_BENCHMARK(T, p1, p2)                                       \
     benchmark::RegisterBenchmark(                                                             \
         bench_naming::format_name("{lvl:device,algo:partition,key_type:" #T                   \
@@ -560,24 +529,6 @@ void run_three_way_benchmark(benchmark::State& state,
         p2)
 
 // clang-format off
-
-#define BENCHMARK_FLAGGED_TYPE(type, value) \
-    CREATE_PARTITION_FLAGGED_BENCHMARK(type, value, 0.05f), \
-    CREATE_PARTITION_FLAGGED_BENCHMARK(type, value, 0.25f), \
-    CREATE_PARTITION_FLAGGED_BENCHMARK(type, value, 0.5f), \
-    CREATE_PARTITION_FLAGGED_BENCHMARK(type, value, 0.75f)
-
-#define BENCHMARK_IF_TYPE(type) \
-    CREATE_PARTITION_IF_BENCHMARK(type, 0.05f), \
-    CREATE_PARTITION_IF_BENCHMARK(type, 0.25f), \
-    CREATE_PARTITION_IF_BENCHMARK(type, 0.5f), \
-    CREATE_PARTITION_IF_BENCHMARK(type, 0.75f)
-
-#define BENCHMARK_TWO_WAY_TYPE(type) \
-    CREATE_PARTITION_TWO_WAY_BENCHMARK(type, 0.05f), \
-    CREATE_PARTITION_TWO_WAY_BENCHMARK(type, 0.25f), \
-    CREATE_PARTITION_TWO_WAY_BENCHMARK(type, 0.5f), \
-    CREATE_PARTITION_TWO_WAY_BENCHMARK(type, 0.75f)
 
 #define BENCHMARK_THREE_WAY_TYPE(type) \
     CREATE_PARTITION_THREE_WAY_BENCHMARK(type, 0.05f, 0.25f), \
@@ -616,31 +567,7 @@ int main(int argc, char *argv[])
 
     // Add benchmarks
     std::vector<benchmark::internal::Benchmark*> benchmarks
-        = {BENCHMARK_FLAGGED_TYPE(int, unsigned char),
-           BENCHMARK_FLAGGED_TYPE(float, unsigned char),
-           BENCHMARK_FLAGGED_TYPE(double, unsigned char),
-           BENCHMARK_FLAGGED_TYPE(uint8_t, uint8_t),
-           BENCHMARK_FLAGGED_TYPE(int8_t, int8_t),
-           BENCHMARK_FLAGGED_TYPE(rocprim::half, int8_t),
-           BENCHMARK_FLAGGED_TYPE(custom_double2, unsigned char),
-
-           BENCHMARK_IF_TYPE(int),
-           BENCHMARK_IF_TYPE(float),
-           BENCHMARK_IF_TYPE(double),
-           BENCHMARK_IF_TYPE(uint8_t),
-           BENCHMARK_IF_TYPE(int8_t),
-           BENCHMARK_IF_TYPE(rocprim::half),
-           BENCHMARK_IF_TYPE(custom_int_double),
-
-           BENCHMARK_TWO_WAY_TYPE(int),
-           BENCHMARK_TWO_WAY_TYPE(float),
-           BENCHMARK_TWO_WAY_TYPE(double),
-           BENCHMARK_TWO_WAY_TYPE(uint8_t),
-           BENCHMARK_TWO_WAY_TYPE(int8_t),
-           BENCHMARK_TWO_WAY_TYPE(rocprim::half),
-           BENCHMARK_TWO_WAY_TYPE(custom_int_double),
-
-           BENCHMARK_THREE_WAY_TYPE(int),
+        = {BENCHMARK_THREE_WAY_TYPE(int),
            BENCHMARK_THREE_WAY_TYPE(float),
            BENCHMARK_THREE_WAY_TYPE(double),
            BENCHMARK_THREE_WAY_TYPE(uint8_t),

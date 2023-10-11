@@ -292,9 +292,16 @@ public:
     {
         constexpr unsigned int padding = ::rocprim::device_warp_size();
 
+        //::rocprim::detail::atomic_exch(&prefixes_flags[padding + block_id], PREFIX_PARTIAL);
+#if (__gfx940__ || __gfx941__ || __gfx942__)        
+        __hip_atomic_store(&prefixes_partial_values[padding + block_id], value, __ATOMIC_RELAXED, __HIP_MEMORY_SCOPE_AGENT);
+        __builtin_amdgcn_fence(__ATOMIC_ACQ_REL, "workgroup");
+        __builtin_amdgcn_s_waitcnt(0);     
+#else
         prefixes_partial_values[padding + block_id] = value;
-        ::rocprim::detail::memory_fence_device();
-        ::rocprim::detail::atomic_exch(&prefixes_flags[padding + block_id], PREFIX_PARTIAL);
+        __builtin_amdgcn_fence(__ATOMIC_RELEASE, "agent");
+#endif        
+        __hip_atomic_store(&prefixes_flags[padding + block_id], PREFIX_PARTIAL, __ATOMIC_RELAXED, __HIP_MEMORY_SCOPE_AGENT);
     }
 
     ROCPRIM_DEVICE ROCPRIM_INLINE
@@ -303,8 +310,11 @@ public:
         constexpr unsigned int padding = ::rocprim::device_warp_size();
 
         prefixes_complete_values[padding + block_id] = value;
-        ::rocprim::detail::memory_fence_device();
-        ::rocprim::detail::atomic_exch(&prefixes_flags[padding + block_id], PREFIX_COMPLETE);
+        __builtin_amdgcn_fence(__ATOMIC_RELEASE, "agent");
+        //::rocprim::detail::atomic_exch(&prefixes_flags[padding + block_id], PREFIX_COMPLETE);
+        //__builtin_amdgcn_fence(__ATOMIC_ACQ_REL, "workgroup");
+        //__builtin_amdgcn_s_waitcnt(0);                
+        __hip_atomic_store(&prefixes_flags[padding + block_id], PREFIX_COMPLETE, __ATOMIC_RELAXED, __HIP_MEMORY_SCOPE_AGENT);
     }
 
     // block_id must be > 0
@@ -317,8 +327,8 @@ public:
         unsigned int times_through = 1;
 
         // atomic_add(..., 0) is used to load values atomically
-        flag = ::rocprim::detail::atomic_add(&prefixes_flags[padding + block_id], 0);
-        ::rocprim::detail::memory_fence_device();
+        //flag = ::rocprim::detail::atomic_add(&prefixes_flags[padding + block_id], 0);
+        flag = __hip_atomic_load(&prefixes_flags[padding + block_id], __ATOMIC_RELAXED, __HIP_MEMORY_SCOPE_AGENT);
         while(flag == PREFIX_EMPTY)
         {
             if (UseSleep)
@@ -332,11 +342,12 @@ public:
                 if (times_through < SLEEP_MAX)
                     times_through++;
             }
-
-            flag = ::rocprim::detail::atomic_add(&prefixes_flags[padding + block_id], 0);
-            ::rocprim::detail::memory_fence_device();
+            flag = __hip_atomic_load(&prefixes_flags[padding + block_id], __ATOMIC_RELAXED, __HIP_MEMORY_SCOPE_AGENT);
+            //flag = ::rocprim::detail::atomic_add(&prefixes_flags[padding + block_id], 0);
         }
-
+        //__builtin_amdgcn_fence(__ATOMIC_ACQ_REL, "workgroup");
+        //__builtin_amdgcn_s_waitcnt(0);
+        //__builtin_amdgcn_fence(__ATOMIC_ACQUIRE, "agent");
         if(flag == PREFIX_PARTIAL)
             value = prefixes_partial_values[padding + block_id];
         else
