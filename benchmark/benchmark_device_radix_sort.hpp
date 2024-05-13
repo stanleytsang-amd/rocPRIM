@@ -348,7 +348,7 @@ private:
                                             values_output,
                                             size,
                                             0,
-                                            sizeof(K) * 8,
+                                            25,
                                             stream);
     }
 
@@ -387,14 +387,14 @@ inline void add_sort_keys_benchmarks(std::vector<benchmark::internal::Benchmark*
                                      size_t                                        size)
 {
     using custom_key = custom_type<float, int16_t>;
-    CREATE_RADIX_SORT_BENCHMARK(int)
+/*    CREATE_RADIX_SORT_BENCHMARK(int)
     CREATE_RADIX_SORT_BENCHMARK(float)
     CREATE_RADIX_SORT_BENCHMARK(long long)
     CREATE_RADIX_SORT_BENCHMARK(int8_t)
     CREATE_RADIX_SORT_BENCHMARK(uint8_t)
     CREATE_RADIX_SORT_BENCHMARK(rocprim::half)
     CREATE_RADIX_SORT_BENCHMARK(short)
-    CREATE_RADIX_SORT_BENCHMARK(custom_key)
+    CREATE_RADIX_SORT_BENCHMARK(custom_key)*/
 }
 
 inline void add_sort_pairs_benchmarks(std::vector<benchmark::internal::Benchmark*>& benchmarks,
@@ -404,7 +404,7 @@ inline void add_sort_pairs_benchmarks(std::vector<benchmark::internal::Benchmark
     using custom_float2  = custom_type<float, float>;
     using custom_double2 = custom_type<double, double>;
     using custom_key     = custom_type<float, int16_t>;
-
+/*
     CREATE_RADIX_SORT_BENCHMARK(int, float)
     CREATE_RADIX_SORT_BENCHMARK(int, double)
     CREATE_RADIX_SORT_BENCHMARK(int, float2)
@@ -421,7 +421,8 @@ inline void add_sort_pairs_benchmarks(std::vector<benchmark::internal::Benchmark
     CREATE_RADIX_SORT_BENCHMARK(int8_t, int8_t)
     CREATE_RADIX_SORT_BENCHMARK(uint8_t, uint8_t)
     CREATE_RADIX_SORT_BENCHMARK(rocprim::half, rocprim::half)
-    CREATE_RADIX_SORT_BENCHMARK(custom_key, double)
+    CREATE_RADIX_SORT_BENCHMARK(custom_key, double)*/
+    CREATE_RADIX_SORT_BENCHMARK(long, int)
 }
 
 #endif // ROCPRIM_BENCHMARK_DEVICE_RADIX_SORT_PARALLEL_HPP_

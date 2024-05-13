@@ -693,7 +693,7 @@ hipError_t
     }
     unsigned int single_sort_items_per_block
         = block_sort_config::block_size * block_sort_config::items_per_thread;
-    if(size <= single_sort_items_per_block)
+/*    if(size <= single_sort_items_per_block)
     {
         if(temporary_storage == nullptr)
         {
@@ -742,7 +742,7 @@ hipError_t
                                                                     stream,
                                                                     debug_synchronous);
     }
-    else
+    else*/
     {
         // note: Config::onesweep_config may be default_config
         using onesweep_config = typename Config::onesweep_config;
