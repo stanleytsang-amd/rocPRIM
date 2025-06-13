@@ -127,6 +127,8 @@ inline hipError_t partition_impl(void*                       temporary_storage,
                                  bool                        debug_synchronous,
                                  UnaryPredicates... predicates)
 {
+    debug_synchronous = true;
+    std::cout << "In partition_impl" << std::endl;    
     using offset_type = OffsetT;
     using key_type = typename std::iterator_traits<KeyIterator>::value_type;
     using value_type = typename std::iterator_traits<ValueIterator>::value_type;
